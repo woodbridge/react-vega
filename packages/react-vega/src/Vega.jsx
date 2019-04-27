@@ -17,6 +17,7 @@ const propTypes = {
   onParseError: PropTypes.func,
   padding: PropTypes.object,
   renderer: PropTypes.string,
+  loader: PropTypes.object,
   spec: PropTypes.object.isRequired,
   style: PropTypes.object,
   tooltip: PropTypes.func,
@@ -34,6 +35,7 @@ const defaultProps = {
   onParseError() {},
   padding: undefined,
   renderer: 'svg',
+  loader: undefined,
   style: undefined,
   tooltip: () => {},
   width: undefined,
@@ -122,7 +124,8 @@ class Vega extends React.Component {
       // Parse the vega spec and create the view
       try {
         const runtime = vega.parse(spec);
-        const view = new vega.View(runtime).initialize(this.element);
+        const viewConfig = props.loader ? { loader: props.loader } : {};
+        const view = new vega.View(runtime, viewConfig).initialize(this.element);
 
         // Attach listeners onto the signals
         if (spec.signals) {
